@@ -741,7 +741,7 @@ class rigolBaseScope(scpi.common.IdnCommand, scpi.common.ErrorQuery, scpi.common
     def _set_channel_range(self, index, value):
         index = ivi.get_index(self._channel_name, index)
         value = float(value)
-        self._set_channel_range(index, value / self._vertical_divisions)
+        self._set_channel_scale(index, value / self._vertical_divisions)
 
     def _get_channel_scale(self, index):
         index = ivi.get_index(self._channel_name, index)
