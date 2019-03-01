@@ -768,6 +768,19 @@ class rigolBaseScope(scpi.common.IdnCommand, scpi.common.ErrorQuery, scpi.common
         self._set_cache_valid(False, "channel_offset", index)
 
     def _get_measurement_status(self):
+        old_status = self._measurement_status
+        status = self._ask(":trigger:status?").lower()
+        if status == "wait":
+            self._measurement_status = "in_progress"
+        elif status == "stop" or status == "run":
+            self._measurement_status = "complete"
+        elif status == "td":
+            print("Status is td. What?")
+        else:
+            self._measurement_status = "unknown"
+        # if self._measurement_status != old_status:
+        #     pass
+
         return self._measurement_status
 
     def _get_trigger_coupling(self):
@@ -841,7 +854,8 @@ class rigolBaseScope(scpi.common.IdnCommand, scpi.common.ErrorQuery, scpi.common
     def _set_trigger_source(self, value):
         if hasattr(value, 'name'):
             value = value.name
-        value = str(value)
+        elif isinstance(value, int):
+            value = self._channel_name[value]
         if value not in self._channel_name:
             raise ivi.UnknownPhysicalNameException()
         if not self._driver_operation_simulate:

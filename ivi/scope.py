@@ -371,7 +371,7 @@ class Base(ivi.IviContainer):
                         it returns the Acquisition Status Unknown value.
                         
                         Values:
-                        * 'compete'
+                        * 'complete'
                         * 'in_progress'
                         * 'unknown'
                         """, cls, grp, '4.2.2'))
