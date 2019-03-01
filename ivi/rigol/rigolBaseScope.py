@@ -109,7 +109,11 @@ MeasurementFunctionMapping = {
         'preshoot': 'preshoot',
         'ratio': 'vratio',
         'phase': 'phase',
-        'delay': 'delay'}
+        'delay': 'fdelay',
+        'pedges': 'pedges',
+        'nedges': 'nedges',
+        'ppulses': 'ppulses',
+        'npulses': 'npulses'}
 MeasurementFunctionMappingDigital = {
         'rise_time': 'risetime',
         'fall_time': 'falltime',
@@ -1205,11 +1209,11 @@ class rigolBaseScope(scpi.common.IdnCommand, scpi.common.ErrorQuery, scpi.common
                 raise ivi.ValueNotSupportedException()
             func = MeasurementFunctionMappingDigital[measurement_function]
         if not self._driver_operation_simulate:
-            l = func.split(' ')
-            l[0] = l[0] + '?'
-            if len(l) > 1:
-                l[-1] = l[-1] + ','
-            func = ' '.join(l)
+            # l = func.split(' ')
+            # l[0] = l[0] + '?'
+            # if len(l) > 1:
+            #     l[-1] = l[-1] + ','
+            # func = ' '.join(l)
             query = ":measure:item? %s, %s" % (func, self._channel_name[index])
             if measurement_function in ['phase', 'delay']:
                 ref_index = ivi.get_index(self._channel_name, ref_channel)
