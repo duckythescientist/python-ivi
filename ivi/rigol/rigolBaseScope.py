@@ -775,7 +775,7 @@ class rigolBaseScope(scpi.common.IdnCommand, scpi.common.ErrorQuery, scpi.common
         elif status == "stop" or status == "run":
             self._measurement_status = "complete"
         elif status == "td":
-            print("Status is td. What?")
+            self._measurement_status = "complete"
         else:
             self._measurement_status = "unknown"
         # if self._measurement_status != old_status:
