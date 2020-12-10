@@ -1051,8 +1051,17 @@ class agilentBaseScope(scpi.common.IdnCommand, scpi.common.ErrorQuery, scpi.comm
         self._set_cache_valid(False, "trigger_level")
 
     def _get_measurement_status(self):
+        ope = int(self._ask(":operegister:condition?"))
+        wait_trig = ope & (1<<5)
+        running = ope & (1<<3)
+        if wait_trig:
+            self._measurement_status = "in_progress"
+        elif not running:
+            self._measurement_status = "complete"
+        else:
+            self._measurement_status = "unknown"
         return self._measurement_status
-    
+
     def _get_trigger_coupling(self):
         if not self._driver_operation_simulate and not self._get_cache_valid():
             cpl = self._ask(":trigger:coupling?").lower()
@@ -1384,8 +1393,15 @@ class agilentBaseScope(scpi.common.IdnCommand, scpi.common.ErrorQuery, scpi.comm
     
     def _measurement_initiate(self):
         if not self._driver_operation_simulate:
-            self._write(":acquire:complete 100")
-            self._write(":digitize")
+            # self._write(":acquire:complete 100")
+            # self._write(":digitize")
+            # dev._write(":stop")
+            # self._ask("*opc?")  # wait for complete
+            self._write(":single")
+            # for i in range(10):
+            #     if int(self._ask(":aer?")) == 1:
+            #         break
+            #     time.sleep(0.1)
             self._set_cache_valid(False, 'trigger_continuous')
     
     def _get_reference_levels(self):
